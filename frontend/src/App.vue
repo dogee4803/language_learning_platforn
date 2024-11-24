@@ -1,14 +1,11 @@
 <script setup>
-
+import MenuBar from './components/MenuBar.vue';
 </script>
 
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
-    </nav>
-    <Button label="Confirm" />
+    <MenuBar />
+    <Prime-Button label="Confirm" />
     <router-view></router-view> <!-- Здесь отображаются страницы -->
   </div>
 </template>

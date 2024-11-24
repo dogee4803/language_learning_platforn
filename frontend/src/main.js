@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
 import Lara from '@primevue/themes/lara';
+import 'primeicons/primeicons.css'
 import Button from "primevue/button"
 import { definePreset } from '@primevue/themes';
 
@@ -35,5 +36,5 @@ app.use(PrimeVue, {
         }
     }
 });
-app.component('Button', Button)
+app.component('Prime-Button', Button)
 app.mount('#app');
