@@ -5,6 +5,8 @@ import PrimeVue from 'primevue/config';
 import Lara from '@primevue/themes/lara';
 import 'primeicons/primeicons.css'
 import Button from "primevue/button"
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 import { definePreset } from '@primevue/themes';
 
 const MyPreset = definePreset(Lara, {
@@ -37,4 +39,6 @@ app.use(PrimeVue, {
     }
 });
 app.component('Prime-Button', Button)
+app.component('Prime-DataTable', DataTable)
+app.component('Prime-Column', Column)
 app.mount('#app');
