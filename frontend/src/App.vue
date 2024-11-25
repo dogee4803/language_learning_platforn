@@ -5,7 +5,6 @@ import MenuBar from './components/MenuBar.vue';
 <template>
   <div id="app">
     <MenuBar />
-    <Prime-Button label="Confirm" />
     <router-view></router-view> <!-- Здесь отображаются страницы -->
   </div>
 </template>
