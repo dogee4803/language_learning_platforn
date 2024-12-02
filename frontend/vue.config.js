@@ -1,11 +1,13 @@
 module.exports = {
-  devServer: {
+    devServer: {
+      port: 8080,
+      host: 'localhost',
       proxy: {
-          '/ws': {
-              target: 'http://127.0.0.1:8000',
-              changeOrigin: true,
-              ws: true
-          }
+        '^/api': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true
+        }
       }
-  }
-};
+    }
+  };
+  
