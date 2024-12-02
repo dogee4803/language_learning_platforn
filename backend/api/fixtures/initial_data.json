@@ -1,0 +1,498 @@
+[
+    {
+        "model": "api.customer",
+        "pk": 1,
+        "fields": {
+            "last_name": "Иванов",
+            "first_name": "Иван",
+            "middle_name": "Иванович",
+            "phone_number": "+7 (999) 123-45-67",
+            "sex": true,
+            "birth_date": "1990-01-15"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 2,
+        "fields": {
+            "last_name": "Петрова",
+            "first_name": "Мария",
+            "middle_name": "Александровна",
+            "phone_number": "+7 (999) 234-56-78",
+            "sex": false,
+            "birth_date": "1995-03-20"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 3,
+        "fields": {
+            "last_name": "Сидоров",
+            "first_name": "Алексей",
+            "middle_name": "Петрович",
+            "phone_number": "+7 (999) 345-67-89",
+            "sex": true,
+            "birth_date": "1988-07-10"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 4,
+        "fields": {
+            "last_name": "Козлова",
+            "first_name": "Анна",
+            "middle_name": "Дмитриевна",
+            "phone_number": "+7 (999) 456-78-90",
+            "sex": false,
+            "birth_date": "1992-05-25"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 5,
+        "fields": {
+            "last_name": "Морозов",
+            "first_name": "Павел",
+            "middle_name": "Андреевич",
+            "phone_number": "+7 (999) 567-89-01",
+            "sex": true,
+            "birth_date": "1987-11-30"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 6,
+        "fields": {
+            "last_name": "Соколова",
+            "first_name": "Екатерина",
+            "middle_name": "Игоревна",
+            "phone_number": "+7 (999) 678-90-12",
+            "sex": false,
+            "birth_date": "1993-09-15"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 7,
+        "fields": {
+            "last_name": "Волков",
+            "first_name": "Дмитрий",
+            "middle_name": "Сергеевич",
+            "phone_number": "+7 (999) 789-01-23",
+            "sex": true,
+            "birth_date": "1991-04-08"
+        }
+    },
+    {
+        "model": "api.customer",
+        "pk": 8,
+        "fields": {
+            "last_name": "Кузнецова",
+            "first_name": "Ольга",
+            "middle_name": "Владимировна",
+            "phone_number": "+7 (999) 890-12-34",
+            "sex": false,
+            "birth_date": "1994-12-03"
+        }
+    },
+    {
+        "model": "api.teacher",
+        "pk": 1,
+        "fields": {
+            "last_name": "Смирнова",
+            "first_name": "Елена",
+            "middle_name": "Викторовна",
+            "phone_number": "+7 (999) 901-23-45",
+            "sex": false,
+            "birth_date": "1985-04-25",
+            "salary": "75000.00"
+        }
+    },
+    {
+        "model": "api.teacher",
+        "pk": 2,
+        "fields": {
+            "last_name": "Козлов",
+            "first_name": "Дмитрий",
+            "middle_name": "Сергеевич",
+            "phone_number": "+7 (999) 012-34-56",
+            "sex": true,
+            "birth_date": "1982-09-15",
+            "salary": "80000.00"
+        }
+    },
+    {
+        "model": "api.teacher",
+        "pk": 3,
+        "fields": {
+            "last_name": "Новикова",
+            "first_name": "Татьяна",
+            "middle_name": "Александровна",
+            "phone_number": "+7 (999) 123-45-67",
+            "sex": false,
+            "birth_date": "1988-06-20",
+            "salary": "85000.00"
+        }
+    },
+    {
+        "model": "api.teacher",
+        "pk": 4,
+        "fields": {
+            "last_name": "Морозов",
+            "first_name": "Андрей",
+            "middle_name": "Петрович",
+            "phone_number": "+7 (999) 234-56-78",
+            "sex": true,
+            "birth_date": "1980-03-10",
+            "salary": "90000.00"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 1,
+        "fields": {
+            "name": "Английский"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 2,
+        "fields": {
+            "name": "Немецкий"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 3,
+        "fields": {
+            "name": "Французский"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 4,
+        "fields": {
+            "name": "Испанский"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 5,
+        "fields": {
+            "name": "Итальянский"
+        }
+    },
+    {
+        "model": "api.language",
+        "pk": 6,
+        "fields": {
+            "name": "Китайский"
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 1,
+        "fields": {
+            "name": "Базовый английский A1",
+            "start_date": "2024-02-01",
+            "end_date": "2024-04-30",
+            "price": "15000.00",
+            "additional_info": "Курс для начинающих",
+            "language": 1
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 2,
+        "fields": {
+            "name": "Немецкий для путешествий",
+            "start_date": "2024-03-01",
+            "end_date": "2024-05-31",
+            "price": "18000.00",
+            "additional_info": "Разговорный курс",
+            "language": 2
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 3,
+        "fields": {
+            "name": "Французский B1",
+            "start_date": "2024-02-15",
+            "end_date": "2024-06-15",
+            "price": "25000.00",
+            "additional_info": "Продвинутый уровень",
+            "language": 3
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 4,
+        "fields": {
+            "name": "Бизнес английский",
+            "start_date": "2024-03-15",
+            "end_date": "2024-07-15",
+            "price": "30000.00",
+            "additional_info": "Деловой английский для профессионалов",
+            "language": 1
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 5,
+        "fields": {
+            "name": "Испанский A2",
+            "start_date": "2024-04-01",
+            "end_date": "2024-08-31",
+            "price": "20000.00",
+            "additional_info": "Базовый разговорный курс",
+            "language": 4
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 6,
+        "fields": {
+            "name": "Итальянский для начинающих",
+            "start_date": "2024-05-01",
+            "end_date": "2024-08-31",
+            "price": "22000.00",
+            "additional_info": "Базовый курс с погружением в культуру",
+            "language": 5
+        }
+    },
+    {
+        "model": "api.course",
+        "pk": 7,
+        "fields": {
+            "name": "Китайский HSK1",
+            "start_date": "2024-03-01",
+            "end_date": "2024-09-30",
+            "price": "35000.00",
+            "additional_info": "Подготовка к международному экзамену",
+            "language": 6
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 1,
+        "fields": {
+            "customer": 1,
+            "course": 1,
+            "payment_status": true,
+            "payment_date": "2024-01-15",
+            "grade": 85
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 2,
+        "fields": {
+            "customer": 2,
+            "course": 2,
+            "payment_status": true,
+            "payment_date": "2024-02-20",
+            "grade": null
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 3,
+        "fields": {
+            "customer": 3,
+            "course": 3,
+            "payment_status": false,
+            "payment_date": null,
+            "grade": null
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 4,
+        "fields": {
+            "customer": 4,
+            "course": 4,
+            "payment_status": true,
+            "payment_date": "2024-03-01",
+            "grade": 92
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 5,
+        "fields": {
+            "customer": 5,
+            "course": 5,
+            "payment_status": true,
+            "payment_date": "2024-03-25",
+            "grade": 78
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 6,
+        "fields": {
+            "customer": 6,
+            "course": 6,
+            "payment_status": false,
+            "payment_date": null,
+            "grade": null
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 7,
+        "fields": {
+            "customer": 7,
+            "course": 7,
+            "payment_status": true,
+            "payment_date": "2024-02-28",
+            "grade": 88
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 8,
+        "fields": {
+            "customer": 8,
+            "course": 1,
+            "payment_status": true,
+            "payment_date": "2024-01-20",
+            "grade": 95
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 9,
+        "fields": {
+            "customer": 1,
+            "course": 4,
+            "payment_status": true,
+            "payment_date": "2024-03-10",
+            "grade": null
+        }
+    },
+    {
+        "model": "api.customercourse",
+        "pk": 10,
+        "fields": {
+            "customer": 2,
+            "course": 5,
+            "payment_status": false,
+            "payment_date": null,
+            "grade": null
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 1,
+        "fields": {
+            "teacher": 1,
+            "course": 1
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 2,
+        "fields": {
+            "teacher": 2,
+            "course": 2
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 3,
+        "fields": {
+            "teacher": 3,
+            "course": 3
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 4,
+        "fields": {
+            "teacher": 4,
+            "course": 4
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 5,
+        "fields": {
+            "teacher": 1,
+            "course": 5
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 6,
+        "fields": {
+            "teacher": 2,
+            "course": 6
+        }
+    },
+    {
+        "model": "api.teachercourse",
+        "pk": 7,
+        "fields": {
+            "teacher": 3,
+            "course": 7
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 1,
+        "fields": {
+            "teacher": 1,
+            "language": 1
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 2,
+        "fields": {
+            "teacher": 1,
+            "language": 4
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 3,
+        "fields": {
+            "teacher": 2,
+            "language": 2
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 4,
+        "fields": {
+            "teacher": 2,
+            "language": 5
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 5,
+        "fields": {
+            "teacher": 3,
+            "language": 3
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 6,
+        "fields": {
+            "teacher": 3,
+            "language": 6
+        }
+    },
+    {
+        "model": "api.teacherlanguage",
+        "pk": 7,
+        "fields": {
+            "teacher": 4,
+            "language": 1
+        }
+    }
+]
