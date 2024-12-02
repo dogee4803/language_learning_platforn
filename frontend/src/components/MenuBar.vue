@@ -26,12 +26,23 @@ const items = ref([
         icon: 'pi pi-book',
     },
     {
-        label: 'Отчёт: Успеваемость',
-        icon: 'pi pi-trophy'
-    },
-    {
-        label: 'Отчёт: Статистика курсов',
-        icon: 'pi pi-chart-bar'
+        label: 'Отчёты',
+        icon: 'pi pi-chart-line',
+        items: [
+            {
+                label: 'Финансовый отчет',
+                icon: 'pi pi-dollar',
+                command: () => router.push('/financial-report')
+            },
+            {
+                label: 'Успеваемость',
+                icon: 'pi pi-trophy'
+            },
+            {
+                label: 'Статистика курсов',
+                icon: 'pi pi-chart-bar'
+            }
+        ]
     },
     {
         label: 'About',
