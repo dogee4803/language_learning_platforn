@@ -2,18 +2,18 @@
       <h1>Учёт покупателей</h1>
       <Prime-Button label="Добавить" />
     <div class="card">
-        <Prime-DataTable :value="customers" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" tableStyle="max-width: 75rem">
-            <Prime-Column field="id" header="ID" style="width: 25%"></Prime-Column>
-            <Prime-Column field="last_name" header="Фамилия" style="width: 25%"></Prime-Column>
-            <Prime-Column field="first_name" header="Имя" style="width: 25%"></Prime-Column>
-            <Prime-Column field="middle_name" header="Отчество" style="width: 25%"></Prime-Column>
-            <Prime-Column field="sex" header="Пол" style="width: 25%">
+        <Prime-DataTable :value="customers" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" removableSort tableStyle="max-width: 75rem">
+            <Prime-Column field="id" header="ID" sortable style="width: 5%"></Prime-Column>
+            <Prime-Column field="last_name" header="Фамилия" sortable style="width: 20%"></Prime-Column>
+            <Prime-Column field="first_name" header="Имя" sortable style="width: 20%"></Prime-Column>
+            <Prime-Column field="middle_name" header="Отчество" sortable style="width: 20%"></Prime-Column>
+            <Prime-Column field="sex" header="Пол" sortable style="width: 5%">
                 <template #body="slotProps">
                     {{ slotProps.data.sex ? 'М' : 'Ж' }}
                 </template>
             </Prime-Column>
-            <Prime-Column field="phone_number" header="Телефон" style="width: 25%"></Prime-Column>
-            <Prime-Column field="birth_date" header="Дата рождения" style="width: 25%"></Prime-Column>
+            <Prime-Column field="phone_number" header="Телефон" sortable style="width: 20%"></Prime-Column>
+            <Prime-Column field="birth_date" header="Дата рождения" sortable style="width: 10%"></Prime-Column>
         </Prime-DataTable>
     </div>
   </template>
