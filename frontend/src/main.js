@@ -7,6 +7,12 @@ import 'primeicons/primeicons.css'
 import Button from "primevue/button"
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import DatePicker from 'primevue/calendar';
+import Message from 'primevue/message';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
+import InputMask from 'primevue/inputmask';
+import RadioButton from 'primevue/radiobutton';
 import { definePreset } from '@primevue/themes';
 
 const MyPreset = definePreset(Lara, {
@@ -41,4 +47,10 @@ app.use(PrimeVue, {
 app.component('Prime-Button', Button)
 app.component('Prime-DataTable', DataTable)
 app.component('Prime-Column', Column)
+app.component('Prime-DatePicker', DatePicker)
+app.component('Prime-Message', Message)
+app.component('Prime-Dialog', Dialog)
+app.component('Prime-InputText', InputText)
+app.component('Prime-InputMask', InputMask)
+app.component('Prime-RadioButton', RadioButton)
 app.mount('#app');
