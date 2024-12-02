@@ -2,7 +2,7 @@
       <h1>Учёт покупателей</h1>
       <Prime-Button label="Добавить" />
     <div class="card">
-        <Prime-DataTable :value="customers" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" removableSort tableStyle="max-width: 75rem">
+        <Prime-DataTable :value="customers" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" removableSort editMode="row" tableStyle="max-width: 75rem">
             <Prime-Column field="id" header="ID" sortable style="width: 5%"></Prime-Column>
             <Prime-Column field="last_name" header="Фамилия" sortable style="width: 20%"></Prime-Column>
             <Prime-Column field="first_name" header="Имя" sortable style="width: 20%"></Prime-Column>
@@ -14,6 +14,12 @@
             </Prime-Column>
             <Prime-Column field="phone_number" header="Телефон" sortable style="width: 20%"></Prime-Column>
             <Prime-Column field="birth_date" header="Дата рождения" sortable style="width: 10%"></Prime-Column>
+            <Prime-Column :rowEditor="true" style="width: 10%; min-width: 4rem"></Prime-Column>
+            <Prime-Column style="width: 10%; min-width: 4rem">
+                <template #body="{ data }">
+                    <Prime-Button icon="pi pi-trash" severity="danger" text rounded @click="deleteRow(data)" />
+                </template>
+            </Prime-Column>
         </Prime-DataTable>
     </div>
   </template>
