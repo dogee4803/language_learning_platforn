@@ -26,6 +26,10 @@ const items = ref([
         icon: 'pi pi-book',
     },
     {
+        label: 'Языки',
+        icon: 'pi pi-globe',
+    },
+    {
         label: 'Отчёты',
         icon: 'pi pi-chart-line',
         items: [
@@ -44,10 +48,5 @@ const items = ref([
             }
         ]
     },
-    {
-        label: 'About',
-        icon: 'pi pi-book',
-        command: () => router.push('/about')
-    }
 ]);
 </script>
