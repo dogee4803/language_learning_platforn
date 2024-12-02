@@ -20,7 +20,8 @@
       ref="dt" 
       :value="customers" 
       paginator 
-      :rows="10" 
+      :rows="5"
+      :rowsPerPageOptions="[5, 10, 20, 50]" 
       dataKey="id" 
       removableSort
       v-model:editingRows="editingRows" 
