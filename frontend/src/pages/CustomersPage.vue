@@ -7,7 +7,7 @@
             <Prime-Column field="last_name" header="Фамилия" style="width: 25%"></Prime-Column>
             <Prime-Column field="first_name" header="Имя" style="width: 25%"></Prime-Column>
             <Prime-Column field="middle_name" header="Отчество" style="width: 25%"></Prime-Column>
-            <Prime-Column field="gender" header="Пол" style="width: 25%"></Prime-Column>
+            <Prime-Column field="sex" header="Пол" style="width: 25%"></Prime-Column>
             <Prime-Column field="phone_number" header="Телефон" style="width: 25%"></Prime-Column>
             <Prime-Column field="birth_date" header="Дата рождения" style="width: 25%"></Prime-Column>
         </Prime-DataTable>

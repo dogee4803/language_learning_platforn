@@ -6,7 +6,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     phone_number = models.CharField(max_length=30, unique=True)
-    gender = models.BooleanField()
+    sex = models.BooleanField()
     birth_date = models.DateField()
 
     def __str__(self):
@@ -18,7 +18,7 @@ class Teacher(models.Model):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     phone_number = models.CharField(max_length=30, unique=True)
-    gender = models.BooleanField()
+    sex = models.BooleanField()
     birth_date = models.DateField()
     salary = models.DecimalField(max_digits=10, decimal_places=2)
 
