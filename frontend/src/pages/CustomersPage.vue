@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[85%] mx-auto">
-    <h1 class="text-3xl font-bold text-gray-800">Учёт покупателей</h1>
+    <h1 class="text-3xl font-bold text-gray-800 m-4">Учёт покупателей</h1>
     <div class="card w-full">
       <Prime-Toast />
       

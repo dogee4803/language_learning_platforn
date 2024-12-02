@@ -10,12 +10,4 @@ import MenuBar from './components/MenuBar.vue';
 </template>
 
 <style>
-nav {
-    margin-bottom: 20px;
-}
-nav a {
-    margin-right: 15px;
-    text-decoration: none;
-    color: blue;
-}
 </style>
