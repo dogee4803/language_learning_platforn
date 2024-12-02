@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card {
+    @apply bg-white p-6 mb-4 shadow-md rounded-xl;
+  }
+
+  .field {
+    @apply flex flex-col gap-2;
+  }
+
+  small {
+    @apply text-red-500 text-sm mt-1;
+  }
+}
