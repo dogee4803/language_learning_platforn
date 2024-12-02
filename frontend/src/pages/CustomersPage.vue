@@ -32,7 +32,7 @@
       class="w-full"
       tableStyle="min-width: 100%">
         <template #header>
-          <div class="flex justify-between pb-4">
+          <div class="flex justify-between">
             <Prime-Button label="Добавить покупателя" icon="pi pi-plus" @click="showDialog = true" />
             <Prime-Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
           </div>
