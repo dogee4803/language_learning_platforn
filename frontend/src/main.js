@@ -4,6 +4,7 @@ import router from './router';
 import PrimeVue from 'primevue/config';
 import Lara from '@primevue/themes/lara';
 import 'primeicons/primeicons.css'
+import './assets/main.css'
 import Button from "primevue/button"
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -13,6 +14,8 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import InputMask from 'primevue/inputmask';
 import RadioButton from 'primevue/radiobutton';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 import { definePreset } from '@primevue/themes';
 
 const MyPreset = definePreset(Lara, {
@@ -44,6 +47,7 @@ app.use(PrimeVue, {
         }
     }
 });
+app.use(ToastService);
 app.component('Prime-Button', Button)
 app.component('Prime-DataTable', DataTable)
 app.component('Prime-Column', Column)
@@ -53,4 +57,5 @@ app.component('Prime-Dialog', Dialog)
 app.component('Prime-InputText', InputText)
 app.component('Prime-InputMask', InputMask)
 app.component('Prime-RadioButton', RadioButton)
+app.component('Prime-Toast', Toast)
 app.mount('#app');
