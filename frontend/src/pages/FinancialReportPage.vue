@@ -20,22 +20,22 @@
       <!-- Общая статистика -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <Prime-Card>
-          <template #title>Общая сумма оплат</template>
+          <template #title>Общая сумма оплат ₽</template>
           <template #content>
-            <div class="text-2xl font-bold text-blue-600">{{ totalPayments }} ₽</div>
+            <div class="text-2xl font-bold text-blue-600">{{ totalPayments }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Зарплаты преподавателей</template>
+          <template #title>Зарплаты преподавателей ₽</template>
           <template #content>
-            <div class="text-2xl font-bold text-red-600">{{ totalSalaries }} ₽</div>
+            <div class="text-2xl font-bold text-red-600">{{ totalSalaries }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Общая прибыль</template>
+          <template #title>Общая прибыль ₽</template>
           <template #content>
             <div class="text-2xl font-bold" :class="{'text-green-600': totalProfit >= 0, 'text-red-600': totalProfit < 0}">
-              {{ totalProfit }} ₽
+              {{ totalProfit }}
             </div>
           </template>
         </Prime-Card>
@@ -72,20 +72,20 @@
         <template #content>
           <Prime-DataTable :value="teacherStats" paginator :rows="15" removableSort class="w-full">
             <Prime-Column field="name" header="Преподаватель" sortable></Prime-Column>
-            <Prime-Column field="total_revenue" header="Доход от курсов" sortable>
+            <Prime-Column field="total_revenue" header="Доход от курсов ₽" sortable>
               <template #body="slotProps">
-                {{ formatCurrency(slotProps.data.total_revenue) }}
+                {{ formatNumber(slotProps.data.total_revenue) }}
               </template>
             </Prime-Column>
-            <Prime-Column field="total_salary" header="Зарплата" sortable>
+            <Prime-Column field="total_salary" header="Зарплата ₽" sortable>
               <template #body="slotProps">
-                {{ formatCurrency(slotProps.data.total_salary) }}
+                {{ formatNumber(slotProps.data.total_salary) }}
               </template>
             </Prime-Column>
             <Prime-Column field="efficiency" header="% от дохода" sortable>
               <template #body="slotProps">
                 <Prime-Tag :severity="getEfficiencySeverity(slotProps.data.efficiency)">
-                  {{ slotProps.data.efficiency }}%
+                  {{ slotProps.data.efficiency }}
                 </Prime-Tag>
               </template>
             </Prime-Column>
@@ -96,24 +96,29 @@
       </Prime-Card>
 
       <!-- Детальная таблица -->
-      <Prime-DataTable :value="detailedData" paginator :rows="10" class="w-full">
-        <Prime-Column field="date" header="Дата" sortable></Prime-Column>
-        <Prime-Column field="course" header="Курс" sortable></Prime-Column>
-        <Prime-Column field="language" header="Язык" sortable></Prime-Column>
-        <Prime-Column field="teacher" header="Преподаватель" sortable></Prime-Column>
-        <Prime-Column field="amount" header="Сумма" sortable>
-          <template #body="slotProps">
-            {{ slotProps.data.amount }} ₽
-          </template>
-        </Prime-Column>
-        <Prime-Column field="status" header="Статус" sortable>
-          <template #body="slotProps">
-            <Prime-Tag :severity="getStatusSeverity(slotProps.data.status)">
-              {{ getStatusLabel(slotProps.data.status) }}
-            </Prime-Tag>
-          </template>
-        </Prime-Column>
-      </Prime-DataTable>
+      <Prime-Card class="mb-4">
+        <template #title>Детальная таблица по платежам</template>
+        <template #content>
+          <Prime-DataTable :value="detailedData" paginator :rows="10" class="w-full">
+          <Prime-Column field="date" header="Дата" sortable></Prime-Column>
+          <Prime-Column field="course" header="Курс" sortable></Prime-Column>
+          <Prime-Column field="language" header="Язык" sortable></Prime-Column>
+          <Prime-Column field="teacher" header="Преподаватель" sortable></Prime-Column>
+          <Prime-Column field="amount" header="Сумма ₽" sortable>
+            <template #body="slotProps">
+              {{ formatNumber(slotProps.data.amount) }}
+            </template>
+          </Prime-Column>
+          <Prime-Column field="status" header="Статус" sortable>
+            <template #body="slotProps">
+              <Prime-Tag :severity="getStatusSeverity(slotProps.data.status)">
+                {{ getStatusLabel(slotProps.data.status) }}
+              </Prime-Tag>
+            </template>
+          </Prime-Column>
+        </Prime-DataTable>
+        </template>
+      </Prime-Card>
     </div>
   </div>
 </template>
@@ -179,8 +184,12 @@ const monthlyData = ref({
 });
 
 
-function formatCurrency(value) {
-  return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(value);
+function formatNumber(value) {
+  return new Intl.NumberFormat('ru-RU', { 
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 }
 
 function getEfficiencySeverity(efficiency) {

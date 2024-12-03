@@ -62,7 +62,7 @@
         </Prime-Column>
         <Prime-Column field="sex" header="Пол" sortable style="width: 8%">
           <template #body="slotProps">
-            {{ slotProps.data.sex ? 'М' : 'Ж' }}
+            {{ slotProps.data.sex === true ? 'М' : 'Ж' }}
           </template>
           <template #editor="{ data }">
             <div class="flex align-items-center">

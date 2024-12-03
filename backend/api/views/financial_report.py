@@ -30,6 +30,7 @@ def financial_report(request):
             total=Sum('amount')
         )['total'] or 0
 
+        """
         # Статистика по языкам
         language_stats = []
         for language in Language.objects.all():
@@ -47,6 +48,7 @@ def financial_report(request):
                     'total': float(total),
                     'count': language_payments.count()
                 })
+        """
 
         # Статистика по месяцам
         monthly_stats = []
@@ -148,7 +150,6 @@ def financial_report(request):
             'total_payments': float(total_payments),
             'total_teacher_salaries': float(total_teacher_salaries),
             'total_profit': float(total_payments) - float(total_teacher_salaries),
-            'language_stats': language_stats,
             'monthly_stats': monthly_stats,
             'detailed_data': detailed_data,
             'teacher_stats': teacher_stats

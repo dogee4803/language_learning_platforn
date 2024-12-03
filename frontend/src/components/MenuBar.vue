@@ -1,9 +1,8 @@
 <template>
-    <nav>
+    <nav v-if="isLoggedIn">
         <Menubar :model="items" class="flex justify-content-between">
             <template #end>
                 <Prime-Button 
-                    v-if="isLoggedIn"
                     icon="pi pi-sign-out" 
                     label="Выйти" 
                     severity="secondary"

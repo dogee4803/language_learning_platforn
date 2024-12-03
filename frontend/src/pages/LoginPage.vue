@@ -40,6 +40,7 @@
         @click="login" 
         class="w-full"
         :loading="loading"
+        type="button"
       />
     </div>
   </div>
@@ -107,17 +108,11 @@ const login = async () => {
       life: 3000
     });
     
-    // Получаем сохраненный путь или параметр redirect из URL
     const redirectPath = router.currentRoute.value.query.redirect || localStorage.getItem('redirectPath') || '/customers';
-    
-    // Очищаем сохраненный путь
     localStorage.removeItem('redirectPath');
-    
-    // Перенаправляем пользователя
     router.push(redirectPath);
   } catch (error) {
     console.error('Ошибка авторизации:', error);
-    console.error('Детали ошибки:', error.response?.data);
     errorMessage.value = error.response?.data?.detail || 'Ошибка авторизации';
     toast.add({
       severity: 'error',
