@@ -3,6 +3,7 @@ backend/.venv/
 **/__pycache__/
 **/*.pyc
 backend/db.sqlite3
+backend/api/fixtures/
 
 # Frontend
 frontend/node_modules/
