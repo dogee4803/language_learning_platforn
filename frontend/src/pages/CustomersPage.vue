@@ -41,19 +41,22 @@
         <Prime-Column field="id" header="ID" sortable style="width: 5%"></Prime-Column>
         <Prime-Column field="last_name" header="Фамилия" sortable style="width: 19%">
           <template #editor="{ data, field }">
-            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" />
+            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" :class="{ 'p-invalid': validationErrors.last_name }" />
+            <small v-if="validationErrors.last_name">{{ validationErrors.last_name }}</small>
             <small v-if="editErrors.last_name">{{ editErrors.last_name }}</small>
           </template>
         </Prime-Column>
         <Prime-Column field="first_name" header="Имя" sortable style="width: 19%">
           <template #editor="{ data, field }">
-            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" />
+            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" :class="{ 'p-invalid': validationErrors.first_name }" />
+            <small v-if="validationErrors.first_name">{{ validationErrors.first_name }}</small>
             <small v-if="editErrors.first_name">{{ editErrors.first_name }}</small>
           </template>
         </Prime-Column>
         <Prime-Column field="middle_name" header="Отчество" sortable style="width: 19%">
           <template #editor="{ data, field }">
-            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" />
+            <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" :class="{ 'p-invalid': validationErrors.middle_name }" />
+            <small v-if="validationErrors.middle_name" class="p-error">{{ validationErrors.middle_name }}</small>
             <small v-if="editErrors.middle_name">{{ editErrors.middle_name }}</small>
           </template>
         </Prime-Column>
@@ -101,25 +104,20 @@
         header="Добавить покупателя" 
         :style="{ width: '450px' }"
         class="p-fluid">
-        <!-- Сообщения об ошибках добавления -->
-        <div v-if="Object.keys(errorsAdd).length > 0" class="mb-3">
-          <Prime-Message severity="error" :life="10000">
-            <div v-for="(error, field) in errorsAdd" :key="field">
-              <strong>{{ field }}:</strong> {{ Array.isArray(error) ? error.join(', ') : error }}
-            </div>
-          </Prime-Message>
-        </div>
         <div class="grid">
           <div class="col-12 mb-2">
-            <Prime-InputText v-model="newCustomer.last_name" placeholder="Фамилия" class="w-full" />
+            <Prime-InputText v-model="newCustomer.last_name" placeholder="Фамилия" class="w-full" :class="{ 'p-invalid': validationErrors.last_name }" />
+            <small v-if="validationErrors.last_name">{{ validationErrors.last_name }}</small>
             <small v-if="errorsAdd.last_name">{{ errorsAdd.last_name }}</small>
           </div>
           <div class="col-12 mb-2">
-            <Prime-InputText v-model="newCustomer.first_name" placeholder="Имя" class="w-full" />
+            <Prime-InputText v-model="newCustomer.first_name" placeholder="Имя" class="w-full" :class="{ 'p-invalid': validationErrors.first_name }" />
+            <small v-if="validationErrors.first_name">{{ validationErrors.first_name }}</small>
             <small v-if="errorsAdd.first_name">{{ errorsAdd.first_name }}</small>
           </div>
           <div class="col-12 mb-2">
-            <Prime-InputText v-model="newCustomer.middle_name" placeholder="Отчество" class="w-full" />
+            <Prime-InputText v-model="newCustomer.middle_name" placeholder="Отчество" class="w-full" :class="{ 'p-invalid': validationErrors.middle_name }" />
+            <small v-if="validationErrors.middle_name">{{ validationErrors.middle_name }}</small>
             <small v-if="errorsAdd.middle_name">{{ errorsAdd.middle_name }}</small>
           </div>
           <div class="col-12 mb-2">
@@ -172,6 +170,11 @@ const dt = ref();
 const errorsAdd = ref({});
 const editErrors = ref({});
 const errorMessage = ref(null);
+const validationErrors = ref({
+  last_name: '',
+  first_name: '',
+  middle_name: ''
+});
 
 const newCustomer = ref({
   first_name: '',
@@ -193,6 +196,51 @@ const closeDialog = () => {
     birth_date: ''
   };
   errorsAdd.value = {};
+  validationErrors.value = {
+    last_name: '',
+    first_name: '',
+    middle_name: ''
+  };
+};
+
+const validateCustomer = (customer) => {
+    const validationErrors = {};
+    
+    if (!customer.first_name || /^\s*$/.test(customer.first_name)) {
+        validationErrors.first_name = 'Имя обязательно и не должно начинаться с пробела.';
+    } else if (!/^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(customer.first_name)) {
+        validationErrors.first_name = 'Имя может содержать только буквы.';
+    }
+
+    if (!customer.last_name || /^\s*$/.test(customer.last_name)) {
+        validationErrors.last_name = 'Фамилия обязательна и не должна начинаться с пробела.';
+    } else if (!/^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(customer.last_name)) {
+        validationErrors.last_name = 'Фамилия может содержать только буквы.';
+    }
+
+    if (customer.middle_name) {  // Проверяем отчество только если оно есть
+        if (/^\s*$/.test(customer.middle_name)) {
+            validationErrors.middle_name = 'Отчество не должно начинаться с пробела.';
+        } else if (!/^[a-zA-Zа-яА-ЯёЁ\s]+$/.test(customer.middle_name)) {
+            validationErrors.middle_name = 'Отчество может содержать только буквы.';
+        }
+    }
+
+    if (customer.phone_number === null || customer.phone_number === '') {
+        validationErrors.phone_number = 'Телефон обязателен.';
+    }
+
+    if (!customer.birth_date) {
+        validationErrors.birth_date = 'Дата рождения обязательна.';
+    } else {
+        const birthDate = new Date(customer.birth_date);
+        const now = new Date();
+        if (birthDate > now) {
+            validationErrors.birth_date = 'Дата рождения не может быть в будущем.';
+        }
+    }
+
+    return validationErrors;
 };
 
 const fetchCustomers = async () => {
@@ -208,26 +256,45 @@ const fetchCustomers = async () => {
 };
 
 const addCustomer = async () => {
-  try {
-    console.log('Отправляемые данные:', newCustomer.value);
-    // Форматируем дату в формат YYYY-MM-DD перед отправкой
-    const customerData = {
-      ...newCustomer.value,
-      birth_date: newCustomer.value.birth_date ? new Date(newCustomer.value.birth_date).toISOString().split('T')[0] : null
-    };
-    const response = await api.post("customers/", customerData);
-    customers.value.push(response.data);
-    toast.add({ severity: 'success', summary: 'Успех', detail: 'Покупатель успешно добавлен', life: 3000 });
-    await fetchCustomers();
-    showDialog.value = false;
-    newCustomer.value = { sex: true };
-    errorsAdd.value = {};
-    errorMessage.value = null;
-  } catch (error) {
-    console.error("Ошибка добавления покупателя:", error);
-    toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось добавить покупателя', life: 5000 });
-    errorsAdd.value = error.response?.data || { error: 'Ошибка при добавлении покупателя' };
-  }
+    const errors = validateCustomer(newCustomer.value);
+    if (Object.keys(errors).length > 0) {
+        errorsAdd.value = errors;
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка валидации',
+            detail: 'Пожалуйста, исправьте ошибки в форме',
+            life: 5000
+        });
+        return;
+    }
+
+    try {
+        const customerData = formatCustomerForSave(newCustomer.value);
+        console.log('Отправляемые данные:', customerData);
+        const response = await api.post('customers/', customerData);
+        customers.value.push(response.data);
+        toast.add({
+            severity: 'success',
+            summary: 'Успешно',
+            detail: 'Покупатель успешно добавлен',
+            life: 3000
+        });
+        showDialog.value = false;
+        newCustomer.value = { sex: true };
+        errorsAdd.value = {};
+        errorMessage.value = null;
+    } catch (error) {
+        console.error("Ошибка добавления покупателя:", error);
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка',
+            detail: error.response?.data?.detail || 'Не удалось добавить покупателя',
+            life: 5000
+        });
+        if (error.response?.data) {
+            errorsAdd.value = error.response.data;
+        }
+    }
 };
 
 const deleteRow = async (data) => {
@@ -249,71 +316,76 @@ const onRowEditInit = (event) => {
   console.log('Начало редактирования:', editingData.value);
 };
 
-const onCellEditComplete = (event) => {
-  const { data, field, newValue } = event;
-  if (editingData.value && editingData.value.id === data.id) {
-    editingData.value[field] = newValue;
-    console.log('Изменено поле:', field, 'новое значение:', newValue);
-  }
+const onCellEditComplete = ({ data, field, newValue }) => {
+  editingData.value = { ...data, [field]: newValue };
 };
 
-const onRowEditSave = async (event) => {
-  let dataToUpdate;
-  try {
-    // Используем editingData вместо event.data
-    dataToUpdate = editingData.value || event.data;
-    console.log('Исходные данные для обновления:', dataToUpdate);
-    
-    const customerData = formatCustomerData(dataToUpdate);
-    console.log('Отформатированные данные:', customerData);
-    
-    const response = await api.put(`customers/${dataToUpdate.id}/`, customerData);
-    // Обновляем данные в таблице данными с сервера
-    const index = customers.value.findIndex(customer => customer.id === dataToUpdate.id);
-    if (index !== -1) {
-      customers.value[index] = response.data;
+const formatCustomerForSave = (customer) => {
+  return {
+    ...customer,
+    birth_date: customer.birth_date ? new Date(customer.birth_date).toISOString().split('T')[0] : null
+  };
+};
+
+const onRowEditSave = async () => {
+    if (!editingData.value) {
+        console.error('Нет данных для обновления');
+        return;
     }
-    editErrors.value = {};
-    editingData.value = null; // Очищаем данные редактирования
-    errorMessage.value = null;
-    toast.add({ severity: 'success', summary: 'Успех', detail: 'Данные покупателя обновлены', life: 3000 });
-  } catch (error) {
-    console.error("Ошибка сохранения покупателя:", error);
-    toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось обновить данные покупателя', life: 5000 });
-    editErrors.value = error.response?.data || { error: 'Ошибка при сохранении покупателя' };
-    showErrorDetails(error);
-    // Восстанавливаем данные с сервера в случае ошибки
-    if (dataToUpdate) {
-      try {
-        const originalCustomer = await api.get(`customers/${dataToUpdate.id}/`);
-        const index = customers.value.findIndex(customer => customer.id === dataToUpdate.id);
+
+    const errors = validateCustomer(editingData.value);
+    if (Object.keys(errors).length > 0) {
+        editErrors.value = errors;
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка валидации',
+            detail: 'Пожалуйста, исправьте ошибки в форме',
+            life: 5000
+        });
+        return;
+    }
+
+    try {
+        const customerData = formatCustomerForSave(editingData.value);
+        const response = await api.put(`customers/${customerData.id}/`, customerData);
+        
+        // Обновляем данные в таблице
+        const index = customers.value.findIndex(item => item.id === customerData.id);
         if (index !== -1) {
-          customers.value[index] = originalCustomer.data;
+            customers.value[index] = response.data;
         }
-      } catch (restoreError) {
-        console.error("Ошибка при восстановлении данных:", restoreError);
-        toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось восстановить исходные данные', life: 5000 });
-        showErrorDetails(restoreError);
-      }
+        
+        toast.add({
+            severity: 'success',
+            summary: 'Успешно',
+            detail: 'Данные покупателя обновлены',
+            life: 3000
+        });
+        
+        editErrors.value = {};
+        editingData.value = null;
+    } catch (error) {
+        console.error("Ошибка обновления:", error);
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка',
+            detail: error.response?.data?.detail || 'Не удалось обновить данные',
+            life: 5000
+        });
+        if (error.response?.data) {
+            editErrors.value = error.response.data;
+        }
     }
-  }
 };
 
-const onRowEditCancel = (event) => {
-  console.log('Отмена редактирования:', event.data);
+const onRowEditCancel = () => {
+  console.log('Отмена редактирования');
   editErrors.value = {};
-  editingData.value = null; // Очищаем данные редактирования
+  editingData.value = null;
 };
 
 const exportCSV = () => {
   dt.value.exportCSV();
-};
-
-const formatCustomerData = (data) => {
-  return {
-    ...data,
-    birth_date: data.birth_date ? new Date(data.birth_date).toISOString().split('T')[0] : null
-  };
 };
 
 const showErrorDetails = (error) => {
