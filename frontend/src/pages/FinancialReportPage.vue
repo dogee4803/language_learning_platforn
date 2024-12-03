@@ -70,7 +70,7 @@
       <Prime-Card class="mb-4">
         <template #title>Статистика по преподавателям</template>
         <template #content>
-          <Prime-DataTable :value="teacherStats" paginator :rows="5" class="w-full">
+          <Prime-DataTable :value="teacherStats" paginator :rows="15" removableSort class="w-full">
             <Prime-Column field="name" header="Преподаватель" sortable></Prime-Column>
             <Prime-Column field="total_revenue" header="Доход от курсов" sortable>
               <template #body="slotProps">

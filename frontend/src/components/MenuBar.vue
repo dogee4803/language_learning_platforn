@@ -1,6 +1,16 @@
 <template>
     <nav>
-        <Menubar :model="items" />
+        <Menubar :model="items" class="flex justify-content-between">
+            <template #end>
+                <Prime-Button 
+                    icon="pi pi-sign-out" 
+                    label="Выйти" 
+                    severity="secondary"
+                    text
+                    @click="logout"
+                />
+            </template>
+        </Menubar>
     </nav>
 </template>
 
@@ -8,8 +18,41 @@
 import Menubar from 'primevue/menubar';
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from 'primevue/usetoast';
+import api from '@/services/api';
 
 const router = useRouter();
+const toast = useToast();
+
+const logout = async () => {
+    try {
+        await api.post('auth/logout/');
+        
+        // Удаляем токен
+        localStorage.removeItem('token');
+        
+        // Удаляем заголовок авторизации
+        delete api.defaults.headers.common['Authorization'];
+        
+        toast.add({
+            severity: 'success',
+            summary: 'Успешно',
+            detail: 'Вы вышли из системы',
+            life: 3000
+        });
+        
+        // Перенаправляем на страницу входа
+        router.push('/login');
+    } catch (error) {
+        console.error('Ошибка при выходе:', error);
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка',
+            detail: 'Не удалось выйти из системы',
+            life: 5000
+        });
+    }
+};
 
 const items = ref([
     {
@@ -47,6 +90,16 @@ const items = ref([
                 icon: 'pi pi-chart-bar'
             }
         ]
-    },
+    }
 ]);
 </script>
+
+<style scoped>
+:deep(.p-menubar) {
+    padding: 0.5rem 1rem;
+}
+
+:deep(.p-menubar-end) {
+    margin-left: auto;
+}
+</style>

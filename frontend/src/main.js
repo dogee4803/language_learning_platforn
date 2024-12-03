@@ -18,6 +18,7 @@ import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 import Card from 'primevue/card';
 import Tag from 'primevue/tag';
+import Password from 'primevue/password';
 import { definePreset } from '@primevue/themes';
 
 const MyPreset = definePreset(Lara, {
@@ -50,7 +51,6 @@ app.use(PrimeVue, {
     }
 });
 app.use(ToastService);
-app.component('Prime-Button', Button)
 app.component('Prime-DataTable', DataTable)
 app.component('Prime-Column', Column)
 app.component('Prime-DatePicker', DatePicker)
@@ -62,4 +62,6 @@ app.component('Prime-RadioButton', RadioButton)
 app.component('Prime-Toast', Toast)
 app.component('Prime-Card', Card)
 app.component('Prime-Tag', Tag)
+app.component('Prime-Password', Password)
+app.component('Prime-Button', Button)
 app.mount('#app');
