@@ -16,6 +16,8 @@ import InputMask from 'primevue/inputmask';
 import RadioButton from 'primevue/radiobutton';
 import ToastService from 'primevue/toastservice';
 import Toast from 'primevue/toast';
+import Card from 'primevue/card';
+import Tag from 'primevue/tag';
 import { definePreset } from '@primevue/themes';
 
 const MyPreset = definePreset(Lara, {
@@ -58,4 +60,6 @@ app.component('Prime-InputText', InputText)
 app.component('Prime-InputMask', InputMask)
 app.component('Prime-RadioButton', RadioButton)
 app.component('Prime-Toast', Toast)
+app.component('Prime-Card', Card)
+app.component('Prime-Tag', Tag)
 app.mount('#app');
