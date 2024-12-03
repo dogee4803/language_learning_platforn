@@ -27,7 +27,7 @@ def financial_report(request):
 
         # Общая сумма оплат
         total_payments = payments.filter(status='paid').aggregate(
-            total=Sum('amount')
+            total=Sum('course__price')
         )['total'] or 0
 
         """
@@ -39,7 +39,7 @@ def financial_report(request):
                 status='paid'
             )
             total = language_payments.aggregate(
-                total=Sum('amount')
+                total=Sum('course__price')
             )['total'] or 0
             
             if total > 0:
@@ -57,7 +57,7 @@ def financial_report(request):
         ).annotate(
             month=TruncMonth('payment_date')
         ).values('month').annotate(
-            revenue=Sum('amount'),
+            revenue=Sum('course__price'),
             count=Count('id')
         ).order_by('month')
 
@@ -99,7 +99,7 @@ def financial_report(request):
                     status='paid',
                     payment_date__range=[start_date, end_date]
                 )
-                course_revenue = sum(float(payment.amount) for payment in course_payments)
+                course_revenue = sum(float(payment.course.price) for payment in course_payments)
                 total_revenue += course_revenue
                 total_salary += float(teacher.salary) * course_payments.count()
                 total_students += course_payments.count()
@@ -133,7 +133,7 @@ def financial_report(request):
                 'course': payment.course.name,
                 'language': payment.course.language.name,
                 'teacher': teacher_name,
-                'amount': float(payment.amount),
+                'amount': float(payment.course.price),
                 'status': payment.status
             })
 
