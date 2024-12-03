@@ -103,8 +103,7 @@
           <Prime-DataTable :value="detailedData" paginator :rows="10" class="w-full">
           <Prime-Column field="date" header="Дата" sortable></Prime-Column>
           <Prime-Column field="course" header="Курс" sortable></Prime-Column>
-          <Prime-Column field="language" header="Язык" sortable></Prime-Column>
-          <Prime-Column field="teacher" header="Преподаватель" sortable></Prime-Column>
+          <Prime-Column field="customer" header="Плательщик" sortable></Prime-Column>
           <Prime-Column field="amount" header="Сумма ₽" sortable>
             <template #body="slotProps">
               {{ formatNumber(slotProps.data.amount) }}

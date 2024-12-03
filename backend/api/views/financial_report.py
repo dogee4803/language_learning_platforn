@@ -189,8 +189,7 @@ def get_detailed_data(payments):
     Each dictionary contains the following information:
         - date: The payment date in the format '%Y-%m-%d'.
         - course: The course name.
-        - language: The course language name.
-        - teacher: The teacher's full name if they are assigned to the course, otherwise 'Не назначен'.
+        - customer: The customer's full name.
         - amount: The course price.
         - status: The payment status.
 
@@ -203,17 +202,12 @@ def get_detailed_data(payments):
     """
     detailed_data = []
     for payment in payments:
-        try:
-            teacher = TeacherCourse.objects.get(course=payment.course).teacher
-            teacher_name = f"{teacher.last_name} {teacher.first_name}"
-        except TeacherCourse.DoesNotExist:
-            teacher_name = 'Не назначен'
+        customer_name = f"{payment.customer.last_name} {payment.customer.first_name}"
 
         detailed_data.append({
             'date': payment.payment_date.strftime('%Y-%m-%d'),
             'course': payment.course.name,
-            'language': payment.course.language.name,
-            'teacher': teacher_name,
+            'customer': customer_name,
             'amount': float(payment.course.price),
             'status': payment.status
         })
