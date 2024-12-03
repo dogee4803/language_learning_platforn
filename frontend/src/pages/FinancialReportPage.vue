@@ -52,8 +52,7 @@
 
       <!-- График отношения выручки и расходов -->
       <Prime-Card class="mb-4">
-        <template #title>Финансовый отчет</template>
-        <template #subtitle>Выручка: {{ totalPayments }}₽</template>
+        <template #title>Отношение выручки и расходов ₽</template>
         <template #content>
           <Chart type="doughnut" :data="DoughnutChartData" :options="chartOptions" :plugins="[ChartDataLabels, centerTextPlugin]" class="w-full h-[400px]" />
         </template>
@@ -201,8 +200,7 @@ const chartOptions = ref({
           }
           if (context.parsed !== null) {
             label += new Intl.NumberFormat('ru-RU', {
-              style: 'currency',
-              currency: 'RUB',
+              style: 'decimal',
               minimumFractionDigits: 0,
               maximumFractionDigits: 0
             }).format(context.parsed);
@@ -219,8 +217,7 @@ const chartOptions = ref({
       },
       formatter: function(value) {
         return new Intl.NumberFormat('ru-RU', {
-          style: 'currency',
-          currency: 'RUB',
+          style: 'decimal',
           minimumFractionDigits: 0,
           maximumFractionDigits: 0
         }).format(value);
@@ -274,8 +271,7 @@ const centerTextPlugin = {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const text = new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'RUB',
+      style: 'decimal',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(totalPayments.value);
@@ -382,9 +378,9 @@ async function generateReport() {
 function getStatusLabel(status) {
   const labels = {
     'paid': 'Оплачено',
-    'pending': 'Ожидает',
-    'failed': 'Ошибка',
-    'refunded': 'Возврат'
+    'pending': 'Оплачивается',
+    'failed': 'Платёж не прошел',
+    'refunded': 'Оформлен возврат'
   };
   return labels[status] || status;
 }
