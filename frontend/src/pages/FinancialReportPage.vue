@@ -100,15 +100,15 @@
         <template #title>Детальная таблица по платежам</template>
         <template #content>
           <Prime-DataTable :value="detailedData" paginator :rows="10" class="w-full">
-          <Prime-Column field="date" header="Дата" sortable></Prime-Column>
-          <Prime-Column field="course" header="Курс" sortable></Prime-Column>
-          <Prime-Column field="customer" header="Плательщик" sortable></Prime-Column>
-          <Prime-Column field="amount" header="Сумма ₽" sortable>
+          <Prime-Column field="date" header="Дата" sortable style="width: 15%"></Prime-Column>
+          <Prime-Column field="course" header="Курс" sortable style="width: 30%"></Prime-Column>
+          <Prime-Column field="customer" header="Плательщик" sortable style="width: 30%"></Prime-Column>
+          <Prime-Column field="amount" header="Сумма ₽" sortable style="width: 12.5%">
             <template #body="slotProps">
               {{ formatNumber(slotProps.data.amount) }}
             </template>
           </Prime-Column>
-          <Prime-Column field="status" header="Статус" sortable>
+          <Prime-Column field="status" header="Статус" sortable style="width: 12.5%">
             <template #body="slotProps">
               <Prime-Tag :severity="getStatusSeverity(slotProps.data.status)">
                 {{ getStatusLabel(slotProps.data.status) }}
