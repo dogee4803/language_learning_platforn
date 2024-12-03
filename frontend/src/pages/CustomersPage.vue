@@ -60,7 +60,7 @@
             <small v-if="editErrors.middle_name">{{ editErrors.middle_name }}</small>
           </template>
         </Prime-Column>
-        <Prime-Column field="sex" header="Пол" sortable style="width: 8%">
+        <Prime-Column field="sex" header="Пол" sortable style="width: 5%">
           <template #body="slotProps">
             {{ slotProps.data.sex === true ? 'М' : 'Ж' }}
           </template>
@@ -76,7 +76,7 @@
             <small v-if="editErrors.sex">{{ editErrors.sex }}</small>
           </template>
         </Prime-Column>
-        <Prime-Column field="phone_number" header="Телефон" sortable style="width: 15%">
+        <Prime-Column field="phone_number" header="Телефон" sortable style="width: 18%">
           <template #editor="{ data, field }">
             <Prime-InputMask v-model="editingData[field]" mask="+9 (999) 999 99-99" placeholder="+x (xxx) xxx xx-xx" class="w-full"
               @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" />

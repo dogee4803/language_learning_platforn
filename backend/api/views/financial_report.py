@@ -2,18 +2,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncMonth
-from ..models import Payment, Course, Language, TeacherCourse, Teacher
+from ..models import Payment, Course, Teacher
 from datetime import datetime
 
 
 def get_filtered_payments(start_date=None, end_date=None):
     """
-    Returns a queryset of all payments, with the course and language prefetched.
+    Returns a queryset of all payments, with the course prefetched.
     If start_date and end_date are given, it filters the queryset by the payment date.
     
     """
     payments = Payment.objects.select_related(
-        'customer', 'course', 'course__language'
+        'customer', 'course'
     ).all()
 
     if start_date and end_date:
@@ -30,39 +30,6 @@ def calculate_total_payments(payments):
     return payments.filter(status='paid').aggregate(
         total=Sum('course__price')
     )['total'] or 0
-
-
-def get_language_statistics(payments):
-    """
-    Calculates statistics for each language based on the payments.
-
-    Args:
-        payments: A queryset of payment objects.
-
-    Returns:
-        A list of dictionaries, each containing:
-        - 'language': The name of the language.
-        - 'total': The total revenue from courses in this language.
-        - 'count': The number of paid payments for courses in this language.
-
-    """
-    language_stats = []
-    for language in Language.objects.all():
-        language_payments = payments.filter(
-            course__language=language,
-            status='paid'
-        )
-        total = language_payments.aggregate(
-            total=Sum('course__price')
-        )['total'] or 0
-        
-        if total > 0:
-            language_stats.append({
-                'language': language.name,
-                'total': float(total),
-                'count': language_payments.count()
-            })
-    return language_stats
 
 
 def get_monthly_statistics(payments):
@@ -114,27 +81,37 @@ def get_monthly_statistics(payments):
 def calculate_teacher_salaries(payments):
     """
     Calculate the total salaries of the teachers for the given payments.
+    Salary is calculated per month for each teacher who had active courses.
 
     Args:
         payments: A Django QuerySet of Payment objects.
 
     Returns:
         The total salaries of the teachers for the given payments.
-
     """
+    # Получаем уникальные месяцы из платежей
+    months = payments.dates('payment_date', 'month')
     total_salaries = 0
-    for payment in payments:
-        try:
-            teacher = TeacherCourse.objects.get(course=payment.course).teacher
+    
+    # Для каждого месяца находим активных преподавателей
+    for month in months:
+        month_payments = payments.filter(
+            payment_date__year=month.year,
+            payment_date__month=month.month
+        )
+        # Получаем уникальных преподавателей за этот месяц
+        active_teachers = set(payment.course.teacher for payment in month_payments)
+        # Добавляем их месячную зарплату
+        for teacher in active_teachers:
             total_salaries += float(teacher.salary)
-        except TeacherCourse.DoesNotExist:
-            continue
+    
     return total_salaries
 
 
 def get_teacher_statistics(payments, start_date, end_date):
     """
     Calculate statistics for each teacher in the given payments.
+    Salary is calculated per month of activity.
 
     Args:
         payments: A Django QuerySet of Payment objects.
@@ -142,32 +119,35 @@ def get_teacher_statistics(payments, start_date, end_date):
         end_date: The end date of the period.
 
     Returns:
-        A list of dictionaries, each containing:
-            - name: The full name of the teacher.
-            - total_salary: The total salary for the given period.
-            - total_revenue: The total revenue for the given period.
-            - total_students: The total number of students for the given period.
-            - courses_count: The number of courses the teacher is assigned to.
-            - efficiency: The efficiency of the teacher, calculated as the percentage of total salary to total revenue.
-
+        A list of dictionaries containing teacher statistics.
     """
     teacher_stats = []
+    
     for teacher in Teacher.objects.all():
-        teacher_courses = TeacherCourse.objects.filter(teacher=teacher)
-        total_salary = 0
+        teacher_courses = Course.objects.filter(teacher=teacher)
         total_revenue = 0
         total_students = 0
         
-        for tc in teacher_courses:
+        # Получаем все месяцы работы преподавателя
+        teacher_payments = payments.filter(
+            course__in=teacher_courses,
+            status='paid',
+            payment_date__range=[start_date, end_date]
+        )
+        active_months = teacher_payments.dates('payment_date', 'month').count()
+        
+        # Считаем общий доход и количество студентов
+        for course in teacher_courses:
             course_payments = payments.filter(
-                course=tc.course,
+                course=course,
                 status='paid',
                 payment_date__range=[start_date, end_date]
             )
-            course_revenue = sum(float(payment.course.price) for payment in course_payments)
-            total_revenue += course_revenue
-            total_salary += float(teacher.salary) * course_payments.count()
+            total_revenue += sum(float(payment.course.price) for payment in course_payments)
             total_students += course_payments.count()
+        
+        # Зарплата за все месяцы работы
+        total_salary = float(teacher.salary) * active_months
         
         if total_students > 0:
             teacher_stats.append({
@@ -225,7 +205,7 @@ def financial_report(request):
     Returns:
         Response: A Django REST Framework Response object containing the financial report data, 
         including total payments, teacher salaries, profit, monthly statistics, detailed data, 
-        teacher statistics, and language statistics.
+        teacher statistics.
 
     Raises:
         Exception: If any error occurs during the report generation, an error message is included in the response.
@@ -237,7 +217,6 @@ def financial_report(request):
 
         payments = get_filtered_payments(start_date, end_date)
         total_payments = calculate_total_payments(payments)
-        language_stats = get_language_statistics(payments)
         monthly_stats = get_monthly_statistics(payments)
         teacher_stats = get_teacher_statistics(payments, start_date, end_date)
         detailed_data = get_detailed_data(payments)
@@ -250,7 +229,6 @@ def financial_report(request):
             'monthly_stats': monthly_stats,
             'detailed_data': detailed_data,
             'teacher_stats': teacher_stats,
-            'language_stats': language_stats
         }
 
         return Response(response_data)

@@ -41,6 +41,7 @@ class Course(models.Model):
     additional_info = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     customers = models.ManyToManyField(Customer, through='Payment')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -65,14 +66,6 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.customer} - {self.course} ({self.payment_date})"
-
-
-class TeacherCourse(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.teacher} - {self.course}"
 
 
 class TeacherLanguage(models.Model):

@@ -34,9 +34,7 @@
         <Prime-Card>
           <template #title>Прибыль ₽</template>
           <template #content>
-            <div class="text-2xl font-bold" :class="{'text-green-600': totalProfit >= 0, 'text-red-600': totalProfit < 0}">
-              {{ totalProfit }}
-            </div>
+            <div class="text-2xl font-bold text-green-600">{{ totalProfit }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
@@ -156,10 +154,10 @@ const monthlyData = ref({
   labels: [],
   datasets: [
     {
-      label: 'Доходы',
+      label: 'Выручка',
       data: [],
-      borderColor: '#22C55E',
-      backgroundColor: '#22C55E',
+      borderColor: '#3B82F6',
+      backgroundColor: '#3B82F6',
       tension: 0.4
     },
     {
@@ -172,8 +170,8 @@ const monthlyData = ref({
     {
       label: 'Прибыль',
       data: [],
-      borderColor: '#3B82F6',
-      backgroundColor: '#3B82F6',
+      borderColor: '#22C55E',
+      backgroundColor: '#22C55E',
       tension: 0.4
     }
   ]
