@@ -3,6 +3,7 @@
         <Menubar :model="items" class="flex justify-content-between">
             <template #end>
                 <Prime-Button 
+                    v-if="isLoggedIn"
                     icon="pi pi-sign-out" 
                     label="Выйти" 
                     severity="secondary"
@@ -16,13 +17,29 @@
 
 <script setup>
 import Menubar from 'primevue/menubar';
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from 'primevue/usetoast';
 import api from '@/services/api';
 
 const router = useRouter();
 const toast = useToast();
+const isLoggedIn = ref(!!localStorage.getItem('token'));
+
+// Слушаем изменения в localStorage
+const handleStorageChange = () => {
+    isLoggedIn.value = !!localStorage.getItem('token');
+};
+
+onMounted(() => {
+    window.addEventListener('storage', handleStorageChange);
+    // Проверяем при монтировании
+    isLoggedIn.value = !!localStorage.getItem('token');
+});
+
+onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange);
+});
 
 const logout = async () => {
     try {
@@ -30,6 +47,7 @@ const logout = async () => {
         
         // Удаляем токен
         localStorage.removeItem('token');
+        isLoggedIn.value = false;
         
         // Удаляем заголовок авторизации
         delete api.defaults.headers.common['Authorization'];
