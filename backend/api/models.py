@@ -40,20 +40,32 @@ class Course(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     additional_info = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    customers = models.ManyToManyField(Customer, through='Payment')
 
     def __str__(self):
         return self.name
 
 
-class CustomerCourse(models.Model):
-    payment_status = models.BooleanField()
-    payment_date = models.DateField(blank=True, null=True)
-    grade = models.PositiveIntegerField(blank=True, null=True)
+class Payment(models.Model):
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('failed', 'Failed'),
+        ('refunded', 'Refunded'),
+    ]
+
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    payment_date = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES)
+    grade = models.PositiveIntegerField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ['customer', 'course', 'payment_date']
 
     def __str__(self):
-        return f"{self.customer} - {self.course}"
+        return f"{self.customer} - {self.course} ({self.payment_date})"
 
 
 class TeacherCourse(models.Model):
