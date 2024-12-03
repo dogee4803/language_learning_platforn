@@ -16,23 +16,23 @@
         </div>
         <Prime-Button label="Сформировать отчет" @click="generateReport" class="self-end" />
       </div>
-
+      
       <!-- Общая статистика -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <Prime-Card>
-          <template #title>Общая сумма оплат ₽</template>
+          <template #title>Выручка ₽</template>
           <template #content>
             <div class="text-2xl font-bold text-blue-600">{{ totalPayments }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Зарплаты преподавателей ₽</template>
+          <template #title>Выплата зарплат ₽</template>
           <template #content>
             <div class="text-2xl font-bold text-red-600">{{ totalSalaries }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Общая прибыль ₽</template>
+          <template #title>Прибыль ₽</template>
           <template #content>
             <div class="text-2xl font-bold" :class="{'text-green-600': totalProfit >= 0, 'text-red-600': totalProfit < 0}">
               {{ totalProfit }}
@@ -50,11 +50,12 @@
         </Prime-Card>
       </div>
 
-      <!-- График доходов по языкам -->
+      <!-- График отношения выручки и расходов -->
       <Prime-Card class="mb-4">
-        <template #title>Доходы по языкам обучения</template>
+        <template #title>Финансовый отчет</template>
+        <template #subtitle>Выручка: {{ totalPayments }}₽</template>
         <template #content>
-          <Chart type="pie" :data="languageData" :options="chartOptions" class="w-full h-[400px]" />
+          <Chart type="doughnut" :data="DoughnutChartData" :options="chartOptions" :plugins="[ChartDataLabels, centerTextPlugin]" class="w-full h-[400px]" />
         </template>
       </Prime-Card>
 
@@ -127,6 +128,7 @@
 import { ref, onMounted, watch } from 'vue';
 import api from '@/services/api.js';
 import Chart from 'primevue/chart';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const startDate = ref(null);
 const endDate = ref(null);
@@ -142,16 +144,12 @@ watch(teacherStats, (newValue) => {
 }, { deep: true });
 
 // Данные для графиков
-const languageData = ref({
-  labels: [],
+const DoughnutChartData = ref({
   datasets: [{
-    data: [],
+    data: [0, 0],
     backgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56',
-      '#4BC0C0',
-      '#9966FF'
+      '#22C55E',  // Зеленый для прибыли
+      '#EF4444',  // Красный для расходов
     ]
   }]
 });
@@ -183,29 +181,53 @@ const monthlyData = ref({
   ]
 });
 
-
-function formatNumber(value) {
-  return new Intl.NumberFormat('ru-RU', { 
-    style: 'decimal',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-}
-
-function getEfficiencySeverity(efficiency) {
-  if (efficiency <= 30) return 'success';
-  if (efficiency <= 50) return 'warning';
-  return 'danger';
-}
-
+// Настройки для графиков
 const chartOptions = ref({
+  responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: 'bottom'
+    },
+    title: {
+      display: true,
+      text: ''
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          let label = context.label || '';
+          if (label) {
+            label += ': ';
+          }
+          if (context.parsed !== null) {
+            label += new Intl.NumberFormat('ru-RU', {
+              style: 'currency',
+              currency: 'RUB',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(context.parsed);
+          }
+          return label;
+        }
+      }
+    },
+    datalabels: {
+      display: true,
+      color: '#fff',
+      font: {
+        weight: 'bold'
+      },
+      formatter: function(value) {
+        return new Intl.NumberFormat('ru-RU', {
+          style: 'currency',
+          currency: 'RUB',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(value);
+      }
     }
-  },
-  responsive: true,
-  maintainAspectRatio: false
+  }
 });
 
 const monthlyOptions = ref({
@@ -213,7 +235,7 @@ const monthlyOptions = ref({
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top'
+      position: 'bottom '
     },
     title: {
       display: true,
@@ -231,6 +253,52 @@ const monthlyOptions = ref({
     }
   }
 });
+
+// Плагин для центрального текста
+const centerTextPlugin = {
+  id: 'centerText',
+  afterDraw: (chart) => {
+    const { ctx, chartArea: { left, top, width, height } } = chart;
+
+    ctx.save();
+    
+    // Рисуем подпись "Выручка"
+    ctx.font = 'bold 14px Arial';
+    ctx.fillStyle = '#3B82F6';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Выручка', width / 2 + left, height / 2 + top - 15);
+
+    // Рисуем значение
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = '#3B82F6';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const text = new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'RUB',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(totalPayments.value);
+    ctx.fillText(text, width / 2 + left, height / 2 + top + 15);
+    
+    ctx.restore();
+  }
+};
+
+function formatNumber(value) {
+  return new Intl.NumberFormat('ru-RU', { 
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+}
+
+function getEfficiencySeverity(efficiency) {
+  if (efficiency <= 30) return 'success';
+  if (efficiency <= 50) return 'warning';
+  return 'danger';
+}
 
 async function generateReport() {
   if (!startDate.value || !endDate.value) {
@@ -271,17 +339,17 @@ async function generateReport() {
     const totalPaymentsCount = response.data.detailed_data?.length || 0;
     paidPercentage.value = totalPaymentsCount > 0 ? Math.round((paidPayments / totalPaymentsCount) * 100) : 0;
     
-    // Обновляем график по языкам
-    if (response.data.language_stats?.length > 0) {
-      languageData.value = {
-        ...languageData.value,
-        labels: response.data.language_stats.map(item => item.language),
-        datasets: [{
-          ...languageData.value.datasets[0],
-          data: response.data.language_stats.map(item => item.total)
-        }]
-      };
-    }
+    // Обновляем график доходов и расходов
+    DoughnutChartData.value = {
+      labels: ['Прибыль', 'Расходы на зарплаты преподавателей'],
+      datasets: [{
+        ...DoughnutChartData.value.datasets[0],
+        data: [
+          response.data.total_profit,
+          response.data.total_teacher_salaries
+        ]
+      }]
+    };
 
     // Обновляем график по месяцам
     if (response.data.monthly_stats?.length > 0) {
