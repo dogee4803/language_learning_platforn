@@ -68,27 +68,27 @@
       <Prime-Card class="mb-4">
         <template #title>Статистика по преподавателям</template>
         <template #content>
-          <Prime-DataTable :value="teacherStats" paginator :rows="15" removableSort class="w-full">
+          <Prime-DataTable showGridlines :value="teacherStats" paginator :rows="15" removableSort class="w-full">
             <Prime-Column field="name" header="Преподаватель" sortable></Prime-Column>
-            <Prime-Column field="total_revenue" header="Доход от курсов ₽" sortable>
+            <Prime-Column field="total_revenue" header="Доход от курсов ₽" sortable style="text-align: right">
               <template #body="slotProps">
                 {{ formatNumber(slotProps.data.total_revenue) }}
               </template>
             </Prime-Column>
-            <Prime-Column field="total_salary" header="Зарплата ₽" sortable>
+            <Prime-Column field="total_salary" header="Зарплата ₽" sortable style="text-align: right">
               <template #body="slotProps">
                 {{ formatNumber(slotProps.data.total_salary) }}
               </template>
             </Prime-Column>
-            <Prime-Column field="efficiency" header="% от дохода" sortable>
+            <Prime-Column field="efficiency" header="% от дохода" sortable style="text-align: right">
               <template #body="slotProps">
                 <Prime-Tag :severity="getEfficiencySeverity(slotProps.data.efficiency)">
-                  {{ slotProps.data.efficiency }}
+                  {{ slotProps.data.efficiency.toFixed(2) }}
                 </Prime-Tag>
               </template>
             </Prime-Column>
-            <Prime-Column field="total_students" header="Студентов" sortable></Prime-Column>
-            <Prime-Column field="courses_count" header="Курсов" sortable></Prime-Column>
+            <Prime-Column field="total_students" header="Студентов" sortable style="text-align: right"></Prime-Column>
+            <Prime-Column field="courses_count" header="Курсов" sortable style="text-align: right"></Prime-Column>
           </Prime-DataTable>
         </template>
       </Prime-Card>
@@ -97,11 +97,11 @@
       <Prime-Card class="mb-4">
         <template #title>Детальная таблица по платежам</template>
         <template #content>
-          <Prime-DataTable :value="detailedData" paginator :rows="10" class="w-full">
+          <Prime-DataTable showGridlines :value="detailedData" paginator :rows="10" class="w-full">
           <Prime-Column field="date" header="Дата" sortable style="width: 15%"></Prime-Column>
           <Prime-Column field="course" header="Курс" sortable style="width: 30%"></Prime-Column>
           <Prime-Column field="customer" header="Плательщик" sortable style="width: 30%"></Prime-Column>
-          <Prime-Column field="amount" header="Сумма ₽" sortable style="width: 12.5%">
+          <Prime-Column field="amount" header="Сумма ₽" sortable style="width: 12.5%; text-align: right">
             <template #body="slotProps">
               {{ formatNumber(slotProps.data.amount) }}
             </template>
@@ -401,3 +401,12 @@ onMounted(() => {
   generateReport();
 });
 </script>
+
+<style>
+.p-datatable-column-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+</style>

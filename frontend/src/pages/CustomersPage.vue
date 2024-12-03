@@ -17,6 +17,7 @@
       </div>
 
       <Prime-DataTable 
+      showGridlines
       ref="dt" 
       :value="customers" 
       paginator 
@@ -38,7 +39,7 @@
             <Prime-Button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
           </div>
         </template>
-        <Prime-Column field="id" header="ID" sortable style="width: 5%"></Prime-Column>
+        <Prime-Column field="id" header="ID" sortable style="width: 5%; text-align: right"></Prime-Column>
         <Prime-Column field="last_name" header="Фамилия" sortable style="width: 19%">
           <template #editor="{ data, field }">
             <Prime-InputText v-model="editingData[field]" @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" class="w-full" :class="{ 'p-invalid': validationErrors.last_name }" />
@@ -76,14 +77,14 @@
             <small v-if="editErrors.sex">{{ editErrors.sex }}</small>
           </template>
         </Prime-Column>
-        <Prime-Column field="phone_number" header="Телефон" sortable style="width: 18%">
+        <Prime-Column field="phone_number" header="Телефон" sortable style="width: 18%; text-align: left">
           <template #editor="{ data, field }">
             <Prime-InputMask v-model="editingData[field]" mask="+9 (999) 999 99-99" placeholder="+x (xxx) xxx xx-xx" class="w-full"
               @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" />
             <small v-if="editErrors.phone_number">{{ editErrors.phone_number }}</small>
           </template>
         </Prime-Column>
-        <Prime-Column field="birth_date" header="Дата рождения" sortable style="width: 10%">
+        <Prime-Column field="birth_date" header="Дата рождения" sortable style="width: 10%; text-align: left">
           <template #editor="{ data, field }">
             <Prime-DatePicker v-model="editingData[field]" dateFormat="dd.mm.yy" class="w-full"
               @update:modelValue="onCellEditComplete({ data, field, newValue: $event })" />
@@ -399,5 +400,11 @@ const showErrorDetails = (error) => {
 onMounted(fetchCustomers);
 </script>
 
-<style scoped>
+<style>
+.p-datatable-column-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
 </style>
