@@ -422,16 +422,16 @@ function getStatusSeverity(status) {
 
 function validateDates() {
   if (startDate.value && endDate.value) {
-    const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000; // 14 дней в миллисекундах
+    const fourWeeksInMs = 28 * 24 * 60 * 60 * 1000; // 28 дней в миллисекундах
     const timeDiff = endDate.value - startDate.value;
     
-    isValidDateRange.value = startDate.value < endDate.value && timeDiff >= twoWeeksInMs;
+    isValidDateRange.value = startDate.value < endDate.value && timeDiff >= fourWeeksInMs;
     
     if (!isValidDateRange.value) {
       if (startDate.value >= endDate.value) {
         toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Дата начала должна быть меньше даты окончания', life: 3000 });
       } else {
-        toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Минимальный период отчёта - 2 недели', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Минимальный период отчёта - 4 недели', life: 3000 });
       }
     }
   }
