@@ -8,13 +8,25 @@
       <div class="flex gap-4 mb-4">
         <div class="flex flex-col">
           <label>Дата начала</label>
-          <Prime-DatePicker v-model="startDate" dateFormat="dd.mm.yy" />
+          <Prime-DatePicker 
+            v-model="startDate" 
+            dateFormat="dd.mm.yy"
+            :max="endDate"
+            @update:modelValue="validateDates" />
         </div>
         <div class="flex flex-col">
           <label>Дата окончания</label>
-          <Prime-DatePicker v-model="endDate" dateFormat="dd.mm.yy" />
+          <Prime-DatePicker 
+            v-model="endDate" 
+            dateFormat="dd.mm.yy"
+            :min="startDate"
+            @update:modelValue="validateDates" />
         </div>
-        <Prime-Button label="Сформировать отчет" @click="generateReport" class="self-end" />
+        <Prime-Button 
+          label="Сформировать отчет" 
+          @click="generateReport" 
+          class="self-end"
+          :disabled="!isValidDateRange" />
       </div>
       
       <!-- Общая статистика -->
@@ -123,9 +135,11 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import api from '@/services/api.js';
+import { useToast } from 'primevue/usetoast';
 import Chart from 'primevue/chart';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+const toast = useToast();
 const startDate = ref(null);
 const endDate = ref(null);
 const totalPayments = ref(0);
@@ -134,6 +148,7 @@ const totalProfit = ref(0);
 const paidPercentage = ref(0);
 const detailedData = ref([]);
 const teacherStats = ref([]);
+const isValidDateRange = ref(true);
 
 watch(teacherStats, (newValue) => {
   console.log('Teacher stats changed:', newValue);
@@ -319,17 +334,29 @@ async function generateReport() {
       return;
     }
 
+    const data = response.data;
+
+    if (!data.detailed_data.length && !data.teacher_stats.length) {
+      toast.add({ 
+        severity: 'info', 
+        summary: 'Нет данных', 
+        detail: 'За выбранный период нет данных для отображения', 
+        life: 7000 
+      });
+      return;
+    }
+
     // Обновляем данные
-    totalPayments.value = response.data.total_payments || 0;
-    totalSalaries.value = response.data.total_teacher_salaries || 0;
-    totalProfit.value = response.data.total_profit || 0;
-    teacherStats.value = response.data.teacher_stats || [];
+    totalPayments.value = data.total_payments || 0;
+    totalSalaries.value = data.total_teacher_salaries || 0;
+    totalProfit.value = data.total_profit || 0;
+    teacherStats.value = data.teacher_stats || [];
     
     console.log('Teacher stats:', teacherStats.value);
 
     // Вычисляем процент оплаченных платежей
-    const paidPayments = response.data.detailed_data?.filter(p => p.status === 'paid').length || 0;
-    const totalPaymentsCount = response.data.detailed_data?.length || 0;
+    const paidPayments = data.detailed_data?.filter(p => p.status === 'paid').length || 0;
+    const totalPaymentsCount = data.detailed_data?.length || 0;
     paidPercentage.value = totalPaymentsCount > 0 ? Math.round((paidPayments / totalPaymentsCount) * 100) : 0;
     
     // Обновляем график доходов и расходов
@@ -393,12 +420,29 @@ function getStatusSeverity(status) {
   return severities[status] || 'warning';
 }
 
+function validateDates() {
+  if (startDate.value && endDate.value) {
+    const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000; // 14 дней в миллисекундах
+    const timeDiff = endDate.value - startDate.value;
+    
+    isValidDateRange.value = startDate.value < endDate.value && timeDiff >= twoWeeksInMs;
+    
+    if (!isValidDateRange.value) {
+      if (startDate.value >= endDate.value) {
+        toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Дата начала должна быть меньше даты окончания', life: 3000 });
+      } else {
+        toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Минимальный период отчёта - 2 недели', life: 3000 });
+      }
+    }
+  }
+}
+
 onMounted(() => {
-  // Устанавливаем начальные даты (например, текущий месяц)
   const now = new Date();
   endDate.value = now;
-  startDate.value = new Date(now.getFullYear(), now.getMonth(), 1);
-  generateReport();
+  // Устанавливаем начальную дату на 2 недели раньше конечной
+  startDate.value = new Date(now.getTime() - (14 * 24 * 60 * 60 * 1000));
+  validateDates();
 });
 </script>
 

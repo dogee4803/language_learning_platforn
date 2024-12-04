@@ -94,7 +94,7 @@ const items = ref([
         icon: 'pi pi-chart-line',
         items: [
             {
-                label: 'Финансовый отчет',
+                label: 'Финансовый отчёт',
                 icon: 'pi pi-dollar',
                 command: () => router.push('/financial-report')
             },
