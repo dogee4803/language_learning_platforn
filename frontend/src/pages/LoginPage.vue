@@ -50,10 +50,12 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
+import { useAuth } from '@/services/auth';
 import api from '@/services/api';
 
 const router = useRouter();
 const toast = useToast();
+const { setAuthenticated } = useAuth();
 
 const username = ref('');
 const password = ref('');
@@ -80,46 +82,37 @@ const login = async () => {
   if (!validateForm()) return;
   
   loading.value = true;
+  errors.value = {};
   errorMessage.value = '';
   
   try {
-    console.log('Отправка данных:', {
-      username: username.value,
-      password: password.value
-    });
-    
     const response = await api.post('auth/login/', {
       username: username.value,
       password: password.value
     });
     
-    console.log('Ответ сервера:', response.data);
-    
-    // Сохраняем токен в localStorage
     localStorage.setItem('token', response.data.token);
-    
-    // Устанавливаем токен для всех последующих запросов
-    api.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+    setAuthenticated(true);
     
     toast.add({
       severity: 'success',
       summary: 'Успешно',
-      detail: 'Вы успешно вошли в систему',
+      detail: 'Вы вошли в систему',
       life: 3000
     });
     
-    const redirectPath = router.currentRoute.value.query.redirect || localStorage.getItem('redirectPath') || '/customers';
-    localStorage.removeItem('redirectPath');
-    router.push(redirectPath);
+    router.push('/');
   } catch (error) {
-    console.error('Ошибка авторизации:', error);
-    errorMessage.value = error.response?.data?.detail || 'Ошибка авторизации';
-    toast.add({
-      severity: 'error',
-      summary: 'Ошибка',
-      detail: error.response?.data?.detail || 'Неверное имя пользователя или пароль',
-      life: 5000
-    });
+    console.error('Ошибка при входе:', error);
+    if (error.response?.data) {
+      if (typeof error.response.data === 'object') {
+        errors.value = error.response.data;
+      } else {
+        errorMessage.value = error.response.data;
+      }
+    } else {
+      errorMessage.value = 'Произошла ошибка при входе в систему';
+    }
   } finally {
     loading.value = false;
   }

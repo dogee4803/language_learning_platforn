@@ -1,5 +1,5 @@
 <template>
-    <nav v-if="isLoggedIn">
+    <nav v-if="isAuthenticated">
         <Menubar :model="items" class="flex justify-content-between">
             <template #end>
                 <Prime-Button 
@@ -16,60 +16,43 @@
 
 <script setup>
 import Menubar from 'primevue/menubar';
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from 'primevue/usetoast';
+import { useAuth } from '@/services/auth';
 import api from '@/services/api';
 
 const router = useRouter();
 const toast = useToast();
-const isLoggedIn = ref(!!localStorage.getItem('token'));
-
-// Слушаем изменения в localStorage
-const handleStorageChange = () => {
-    isLoggedIn.value = !!localStorage.getItem('token');
-};
-
-onMounted(() => {
-    window.addEventListener('storage', handleStorageChange);
-    // Проверяем при монтировании
-    isLoggedIn.value = !!localStorage.getItem('token');
-});
-
-onUnmounted(() => {
-    window.removeEventListener('storage', handleStorageChange);
-});
+const { isAuthenticated, setAuthenticated } = useAuth();
 
 const logout = async () => {
     try {
         await api.post('auth/logout/');
-        
-        // Удаляем токен
         localStorage.removeItem('token');
-        isLoggedIn.value = false;
-        
-        // Удаляем заголовок авторизации
-        delete api.defaults.headers.common['Authorization'];
-        
+        setAuthenticated(false);
+        router.push('/login');
         toast.add({
             severity: 'success',
             summary: 'Успешно',
             detail: 'Вы вышли из системы',
             life: 3000
         });
-        
-        // Перенаправляем на страницу входа
-        router.push('/login');
     } catch (error) {
         console.error('Ошибка при выходе:', error);
         toast.add({
             severity: 'error',
             summary: 'Ошибка',
             detail: 'Не удалось выйти из системы',
-            life: 5000
+            life: 3000
         });
     }
 };
+
+onMounted(() => {
+    // Проверяем при монтировании
+    setAuthenticated(!!localStorage.getItem('token'));
+});
 
 const items = ref([
     {

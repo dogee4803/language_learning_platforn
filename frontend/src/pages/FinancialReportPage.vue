@@ -440,8 +440,8 @@ function validateDates() {
 onMounted(() => {
   const now = new Date();
   endDate.value = now;
-  // Устанавливаем начальную дату на 2 недели раньше конечной
-  startDate.value = new Date(now.getTime() - (14 * 24 * 60 * 60 * 1000));
+  // Устанавливаем начальную дату на 4 недели раньше конечной
+  startDate.value = new Date(now.getTime() - (28 * 24 * 60 * 60 * 1000));
   validateDates();
 });
 </script>
