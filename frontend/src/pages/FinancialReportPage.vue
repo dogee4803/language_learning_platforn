@@ -32,19 +32,19 @@
       <!-- Общая статистика -->
       <div class="grid grid-cols-4 gap-4 mb-4">
         <Prime-Card>
-          <template #title>Выручка ₽</template>
+          <template #title>Выручка, ₽</template>
           <template #content>
             <div class="text-2xl font-bold text-blue-600">{{ totalPayments }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Выплата зарплат ₽</template>
+          <template #title>Выплата зарплат, ₽</template>
           <template #content>
             <div class="text-2xl font-bold text-red-600">{{ totalSalaries }}</div>
           </template>
         </Prime-Card>
         <Prime-Card>
-          <template #title>Прибыль ₽</template>
+          <template #title>Прибыль, ₽</template>
           <template #content>
             <div class="text-2xl font-bold text-green-600">{{ totalProfit }}</div>
           </template>
@@ -60,9 +60,9 @@
         </Prime-Card>
       </div>
 
-      <!-- График отношения выручки и расходов -->
+      <!-- График отношения прибыли и расходов -->
       <Prime-Card class="mb-4">
-        <template #title>Отношение выручки и расходов ₽</template>
+        <template #title>Отношение прибыли и расходов, ₽</template>
         <template #content>
           <Chart type="doughnut" :data="DoughnutChartData" :options="chartOptions" :plugins="[ChartDataLabels, centerTextPlugin]" class="w-full h-[400px]" />
         </template>
@@ -82,12 +82,12 @@
         <template #content>
           <Prime-DataTable showGridlines :value="teacherStats" paginator :rows="15" removableSort class="w-full">
             <Prime-Column field="name" header="Преподаватель" sortable></Prime-Column>
-            <Prime-Column field="total_revenue" header="Доход от курсов ₽" sortable style="text-align: right">
+            <Prime-Column field="total_revenue" header="Доход от курсов, ₽" sortable style="text-align: right">
               <template #body="slotProps">
                 {{ formatNumber(slotProps.data.total_revenue) }}
               </template>
             </Prime-Column>
-            <Prime-Column field="total_salary" header="Зарплата ₽" sortable style="text-align: right">
+            <Prime-Column field="total_salary" header="Зарплата, ₽" sortable style="text-align: right">
               <template #body="slotProps">
                 {{ formatNumber(slotProps.data.total_salary) }}
               </template>
@@ -113,7 +113,7 @@
           <Prime-Column field="date" header="Дата" sortable style="width: 15%"></Prime-Column>
           <Prime-Column field="course" header="Курс" sortable style="width: 30%"></Prime-Column>
           <Prime-Column field="customer" header="Плательщик" sortable style="width: 30%"></Prime-Column>
-          <Prime-Column field="amount" header="Сумма ₽" sortable style="width: 12.5%; text-align: right">
+          <Prime-Column field="amount" header="Сумма, ₽" sortable style="width: 12.5%; text-align: right">
             <template #body="slotProps">
               {{ formatNumber(slotProps.data.amount) }}
             </template>
@@ -166,7 +166,7 @@ const DoughnutChartData = ref({
 });
 
 const monthlyData = ref({
-  labels: [],
+  labels: ['Выручка', 'Расходы', 'Прибыль'],
   datasets: [
     {
       label: 'Выручка',
@@ -244,7 +244,11 @@ const monthlyOptions = ref({
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'bottom '
+      position: 'bottom',
+      labels: {
+        usePointStyle: true,
+        padding: 20
+      }
     },
     title: {
       display: true,
